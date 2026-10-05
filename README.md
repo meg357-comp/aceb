@@ -4,10 +4,9 @@ ACEB (Anchored Calibrated Empirical Bayes) estimates latent item effects from
 multiple noisy, partially overlapping measurement views. The implementation
 models view-specific scale and residual noise,
 
-\[
-y_{ij} \mid \theta_i \sim
-\mathcal{N}\!\left(b_j + a_j\theta_i,\; s_{ij}^2 + \tau_j^2\right),
-\]
+```text
+y_ij | theta_i ~ Normal(b_j + a_j theta_i, s_ij^2 + tau_j^2)
+```
 
 anchors one reference-view scale, and uses leave-view residual calibration by
 default. This repository contains the runnable core implementation and a small,
@@ -94,9 +93,3 @@ definitions are recorded in [docs/METRICS.md](docs/METRICS.md).
 
 The optional Stan baseline requires a separate CmdStan installation; it is not
 needed for ACEB or the quick-start workflow.
-
-## License
-
-A software license will be added after institutional and coauthor review. The
-code is currently provided for evaluation and reproducibility of the
-accompanying anonymous submission.

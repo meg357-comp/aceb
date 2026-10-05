@@ -1,0 +1,455 @@
+{
+  "audit_date": "2026-07-10",
+  "scope": "Exact implementation contract recovered from code, configs, and persisted diagnostics for reported ACEB experiments.",
+  "repository_root": ".",
+  "important_caveat": "This file records the implemented experiment contract, not an idealized or proposed ACEB contract. Values not present in code/configs/diagnostics are marked NOT_RECOVERED.",
+  "fit_functions": {
+    "anchored_calibrated_eb": {
+      "status": "RECOVERED",
+      "entry_points": [
+        {
+          "symbol": "cmveb.models.baseline.anchored_calibrated_eb",
+          "source": "src/cmveb/models/baseline.py:319-351"
+        },
+        {
+          "symbol": "cmveb.models.anchored_eb.fit_staged_calibrated_eb",
+          "source": "src/cmveb/models/anchored_eb.py:271-367"
+        },
+        {
+          "symbol": "cmveb.models.anchored_eb.AnchoredEBModel.fit",
+          "source": "src/cmveb/models/anchored_eb.py:370-401"
+        }
+      ],
+      "reported_in_sample_ablation": {
+        "residual_calibration": "in_sample",
+        "sources": [
+          "src/cmveb/benchmarks/helm_runner.py:45-49",
+          "src/cmveb/benchmarks/graph_synthetic.py:1016-1019",
+          "scripts/run_summeval_appendix_pilot.py:192-199"
+        ]
+      }
+    },
+    "graph_diagnostics": {
+      "symbol": "cmveb.graph_diagnostics.build_coobservation_graph",
+      "source": "src/cmveb/graph_diagnostics.py:310-404"
+    },
+    "synthetic_runner": {
+      "symbols": [
+        "cmveb.benchmarks.graph_synthetic.run_graph_synthetic_benchmark",
+        "cmveb.benchmarks.graph_synthetic.run_graph_methods"
+      ],
+      "sources": [
+        "src/cmveb/benchmarks/graph_synthetic.py:1211-1275",
+        "src/cmveb/benchmarks/graph_synthetic.py:1357-1450"
+      ]
+    },
+    "medhelm_runner": {
+      "symbol": "cmveb.benchmarks.helm_runner.run_helm_benchmark",
+      "source": "src/cmveb/benchmarks/helm_runner.py:756-920"
+    },
+    "summeval_runner": {
+      "symbol": "scripts/run_summeval_appendix_pilot.py",
+      "source": "scripts/run_summeval_appendix_pilot.py:54-62,184-205,518-526"
+    }
+  },
+  "graph_edge_rule_g": {
+    "implemented_rule": {
+      "description": "For each pair of views j,k, compute the set of shared item ids. If n_shared >= min_shared_items, include the edge. The empirical centered cross-view moment is recorded and flagged as positive if moment > min_positive_moment, but edge inclusion does not require positivity.",
+      "center_before_moment": true,
+      "centering_rule": "Subtract each view's mean estimate before computing cross-view moment.",
+      "requires_positive_empirical_moment": false,
+      "zero_or_negative_moments": "Retained as edges if n_shared passes threshold; edge_is_positive records the sign test.",
+      "min_positive_moment": 1e-12,
+      "edge_uncertainty_or_se": "not computed",
+      "significance_threshold": "none",
+      "source": "src/cmveb/graph_diagnostics.py:317-351"
+    },
+    "singular_value_diagnostics": {
+      "rank_tolerance": "max(1e-7, largest_singular_value * 1e-7)",
+      "normalized_smallest_full_singular_value": "smallest_full_singular_value / sqrt(max(n_edges, 1))",
+      "source": "src/cmveb/graph_diagnostics.py:225-268"
+    },
+    "min_shared_items_by_experiment_family": {
+      "main_graph_synthetic": {
+        "value": 1,
+        "source": "src/cmveb/benchmarks/graph_synthetic.py:1433-1434",
+        "notes": "Config synthetic_graph_main_paper.yaml does not override min_shared_items."
+      },
+      "intervention_synthetic": {
+        "value": 1,
+        "source": "src/cmveb/benchmarks/graph_synthetic.py:780; src/cmveb/benchmarks/graph_synthetic.py:2166",
+        "notes": "Paired intervention graph diagnostics were built with min_shared_items=1 in the intervention code paths."
+      },
+      "component_oracle_ablation": {
+        "value": 1,
+        "source": "configs/synthetic_aceb_component_oracle_ablation.yaml:min_shared_items; src/cmveb/benchmarks/graph_synthetic.py:1188",
+        "notes": "Component variants attach graph diagnostics with min_shared_items=1."
+      },
+      "anchor_sensitivity_ablation": {
+        "value": 1,
+        "source": "configs/synthetic_anchor_sensitivity.yaml:min_shared_items; scripts/run_anchor_sensitivity_ablation.py:275-288"
+      },
+      "misspecification_ablation": {
+        "value": 1,
+        "source": "configs/synthetic_misspec_compact.yaml:min_shared_items; scripts/run_misspec_compact_ablation.py:275-280"
+      },
+      "edge_selection_ablation": {
+        "value": 1,
+        "source": "configs/synthetic_graph_edge_selection.yaml:min_shared_items; scripts/run_edge_selection_ablation.py:341-345"
+      },
+      "same_coverage_ablation": {
+        "value": "NOT_APPLICABLE",
+        "source": "scripts/run_synthetic_same_coverage_recalibration.py:65-84,440-455",
+        "notes": "This script uses the simulated graph design and does not write a separate co-observation graph diagnostic."
+      },
+      "negative_control": {
+        "value": "NOT_APPLICABLE",
+        "source": "scripts/run_negative_control_ablation.py:44-58,65-113",
+        "notes": "Dense complete observations are simulated; no co-observation graph threshold is used."
+      },
+      "medhelm_full_fast": {
+        "value": 10,
+        "source": "configs/helm_real_pairwise_gap_full_fast.yaml:min_shared_items; src/cmveb/benchmarks/helm_runner.py:766",
+        "notes": "Method diagnostics may also contain baseline-attached graph summaries from _with_graph_diagnostics with min_shared_items=1; the reported run-level graph_diagnostics.json uses the runner value."
+      },
+      "medhelm_joint_subset": {
+        "value": 10,
+        "source": "configs/helm_real_pairwise_gap_joint_subset.yaml:min_shared_items; src/cmveb/benchmarks/helm_runner.py:766"
+      },
+      "summeval_appendix_pilot": {
+        "value": 1,
+        "source": "src/cmveb/models/baseline.py:35-38; results/summeval/appendix_pilot/method_diagnostics.json",
+        "notes": "SummEval has method-diagnostic graph summaries only; no separate graph-regime diagnostic output was produced."
+      }
+    }
+  },
+  "anchor_rule_h": {
+    "candidate_anchor_set": {
+      "value": "Exactly one view marked is_reference_view in view_metadata.",
+      "source": "src/cmveb/schemas.py:121-130; src/cmveb/indexing.py:17-55",
+      "status": "RECOVERED"
+    },
+    "admissible_anchor_conditions": {
+      "value": "No degree, overlap, rank, or conditioning admissibility threshold is implemented for ACEB fitting. The only validation is exactly one boolean reference view.",
+      "source": "src/cmveb/schemas.py:121-130",
+      "status": "RECOVERED"
+    },
+    "if_no_admissible_anchor": {
+      "value": "Data validation raises an error if zero or multiple reference views are marked.",
+      "source": "src/cmveb/schemas.py:127-130"
+    },
+    "primary_anchor_selection": {
+      "synthetic": {
+        "value": "view_00 / anchor_view=0",
+        "source": "src/cmveb/benchmarks/graph_synthetic.py:1402; src/cmveb/benchmarks/graph_synthetic.py:417"
+      },
+      "helm_medhelm": {
+        "value": "first sorted view_id has is_reference_view=True",
+        "source": "src/cmveb/datasets/helm_adapter.py:366-379"
+      },
+      "summeval": {
+        "value": "view metadata generated by runner; exact view selected is the first reference view in prepared metadata.",
+        "source": "scripts/run_summeval_appendix_pilot.py; src/cmveb/schemas.py:121-130",
+        "uncertainty": "The exact generated view_metadata lines are not separately cited here because the runner code builds the table inline outside the inspected excerpt."
+      }
+    },
+    "multi_anchor_fitting_in_main_results": {
+      "value": false,
+      "source": "No main HELM/synthetic runner invokes multi-anchor aggregation; anchor sensitivity sweep refits each anchor separately in scripts/run_anchor_sensitivity_ablation.py:296-308."
+    },
+    "anchor_stable_decision_intersection": {
+      "value": "not used in reported main result tables/figures",
+      "source": "No implementation path found in inspected runners; mark as NOT_USED rather than a hidden default."
+    },
+    "decision_threshold_q": {
+      "helm_grouped_leaderboard": {
+        "value": 0.95,
+        "source": "configs/helm_real_pairwise_gap_full_fast.yaml:decision_threshold; src/cmveb/benchmarks/helm_runner.py:918"
+      },
+      "selective_sign_decision_thresholds": {
+        "value": [0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 0.95, 0.975, 0.99],
+        "source": "src/cmveb/evaluate.py:304-363"
+      },
+      "synthetic_false_best_threshold": {
+        "value": "0.95 where metric name is false_best_rate_095",
+        "source": "configs/synthetic_graph_main_paper.yaml:primary_metrics; cmveb ranking/evaluation functions",
+        "uncertainty": "The exact false-best threshold implementation line was not separately traced in this audit; metric naming and configs record 0.95."
+      }
+    }
+  },
+  "aceb_objective_penalty_and_parameters": {
+    "stage_1_prior_fit": {
+      "objective": "negative Gaussian marginal log likelihood plus l2_prior * (sum(w_mu^2) + sum(w_v^2))",
+      "lambda": 0.0001,
+      "penalized_parameters": ["w_mu", "w_v"],
+      "source": "src/cmveb/models/anchored_eb.py:45-68; src/cmveb/config.py:35"
+    },
+    "stage_2_loading_fit": {
+      "objective": "negative Gaussian marginal log likelihood plus l2_view_scale * sum((a_j - 1)^2) over non-reference views; reference scale fixed to 1",
+      "lambda": 0.0001,
+      "penalized_parameters": ["non_reference_view_scale"],
+      "source": "src/cmveb/models/anchored_eb.py:71-102; src/cmveb/config.py:36"
+    },
+    "stage_3_residual_noise": {
+      "objective": "method-of-moments residual calibration, not optimized by likelihood",
+      "penalty": "none",
+      "source": "src/cmveb/models/anchored_eb.py:330-361; src/cmveb/calibration.py:95-163"
+    },
+    "bias_b_j": {
+      "default": "not fitted; view_bias is zero",
+      "source": "src/cmveb/config.py:41-42; src/cmveb/models/anchored_eb.py:322-328,363-366",
+      "actual_diagnostics": "Reported ACEB diagnostics sampled in main/intervention/SummEval contain fit_view_bias=false and center_reference=false."
+    },
+    "prior_mean": {
+      "value": "feature-based linear prior mean X @ w_mu; if no item features are provided an intercept is inserted",
+      "source": "src/cmveb/posterior.py:19-28; src/cmveb/preprocess.py:27-47"
+    },
+    "penalty_differs_by_experiment": {
+      "value": false,
+      "source": "No config override of l2_prior/l2_view_scale found for reported configs; ModelConfig defaults used."
+    }
+  },
+  "parameter_transformations_and_numerical_constraints": {
+    "a_j_positive": {
+      "value": "non-reference loadings optimized as exp(log_scale); reference loading fixed at 1",
+      "source": "src/cmveb/models/anchored_eb.py:87-101"
+    },
+    "prior_variance_positive": {
+      "value": "softplus(X @ w_v) + eps",
+      "eps": 1e-8,
+      "source": "src/cmveb/posterior.py:19-28; src/cmveb/config.py:28"
+    },
+    "tau_j_nonnegative": {
+      "value": "tau2 is positive-part truncated, clipped to [extra_noise_lower^2, extra_noise_upper^2], then square-rooted",
+      "lower": 0.0,
+      "upper": 10.0,
+      "source": "src/cmveb/calibration.py:134-163; src/cmveb/config.py:32-33"
+    },
+    "standard_error_floor": {
+      "preprocess_default": {
+        "value": 1e-8,
+        "source": "src/cmveb/config.py:19-23; src/cmveb/preprocess.py:10-25"
+      },
+      "helm_adapter_full_fast": {
+        "value": 0.02,
+        "source": "configs/helm_real_pairwise_gap_full_fast.yaml:standard_error_floor; src/cmveb/datasets/helm_adapter.py:58-69,107-133"
+      },
+      "summeval_crowd_observation": {
+        "value": 0.75,
+        "source": "scripts/run_summeval_appendix_pilot.py:54-58,520-525"
+      }
+    },
+    "posterior_variance_floor": {
+      "value": 1e-18,
+      "source": "src/cmveb/models/baseline.py:71-80; src/cmveb/evaluate.py:28-31"
+    },
+    "leave_view_variance_floor": {
+      "value": 1e-12,
+      "source": "src/cmveb/calibration.py:51-92"
+    },
+    "target_se_floor": {
+      "helm_adapter_truth_alias": {
+        "value": "standard_error_floor, 0.02 in full-fast config",
+        "source": "src/cmveb/datasets/helm_adapter.py:151-165; configs/helm_real_pairwise_gap_full_fast.yaml:standard_error_floor"
+      },
+      "summeval": {
+        "value": 0.10,
+        "source": "scripts/run_summeval_appendix_pilot.py:54-58,100-109,520-525"
+      },
+      "synthetic": {
+        "value": "not used; truth theta is exact"
+      }
+    },
+    "probability_clipping": {
+      "pairwise_calibration": {
+        "value": "pairwise probabilities clipped to [1e-8, 1 - 1e-8]",
+        "source": "src/cmveb/evaluate.py:366-413"
+      }
+    },
+    "logit_clipping": {
+      "value": "NOT_RECOVERED",
+      "notes": "Bounded-binomial misspecification mentions logit construction in config, but the exact clipping line was not inspected for this contract."
+    }
+  },
+  "optimizer_and_initialization": {
+    "optimizer": {
+      "value": "scipy.optimize.minimize(method='L-BFGS-B')",
+      "source": "src/cmveb/models/anchored_eb.py:66,98; src/cmveb/models/baseline.py:306"
+    },
+    "gradient": {
+      "value": "finite-difference numerical gradient by scipy because jac is not supplied",
+      "source": "src/cmveb/models/anchored_eb.py:66,98"
+    },
+    "stopping_tolerance": {
+      "value": "SCIPY_DEFAULT_NOT_EXPLICITLY_SET",
+      "source": "Only options={'maxiter': max_iter} is passed in src/cmveb/models/anchored_eb.py:66,98."
+    },
+    "number_of_restarts": {
+      "value": 0,
+      "source": "No restart loop in fit_prior_hyperparameters or fit_non_reference_view_scales."
+    },
+    "initialization": {
+      "reference_loading": 1.0,
+      "non_reference_loading": 0.5,
+      "extra_noise_tau": 0.0001,
+      "w_mu": "zeros",
+      "w_v_intercept": "inverse_softplus(var(centered estimates))",
+      "bias": "zeros unless fit_view_bias=True",
+      "sources": [
+        "src/cmveb/models/anchored_eb.py:20-42",
+        "src/cmveb/config.py:27-42"
+      ]
+    },
+    "max_iter_by_experiment_family": {
+      "main_graph_synthetic": {
+        "value": 8,
+        "source": "configs/synthetic_graph_main_paper.yaml:max_iter"
+      },
+      "intervention_synthetic": {
+        "value": 8,
+        "source": "configs/synthetic_graph_intervention_main_paper.yaml:max_iter"
+      },
+      "component_oracle_ablation": {
+        "value": 40,
+        "source": "configs/synthetic_aceb_component_oracle_ablation.yaml:max_iter"
+      },
+      "anchor_sensitivity_ablation": {
+        "value": 40,
+        "source": "configs/synthetic_anchor_sensitivity.yaml:max_iter"
+      },
+      "misspecification_ablation": {
+        "value": 40,
+        "source": "configs/synthetic_misspec_compact.yaml:max_iter"
+      },
+      "edge_selection_ablation": {
+        "value": 35,
+        "source": "configs/synthetic_graph_edge_selection.yaml:max_iter"
+      },
+      "same_coverage_ablation": {
+        "value": 100,
+        "source": "scripts/run_synthetic_same_coverage_recalibration.sh:12; scripts/run_synthetic_same_coverage_recalibration.py:65-84"
+      },
+      "negative_control": {
+        "value": 100,
+        "source": "scripts/run_negative_control_ablation.sh:14; scripts/run_negative_control_ablation.py:44-58"
+      },
+      "medhelm_full_fast": {
+        "value": 3,
+        "source": "configs/helm_real_pairwise_gap_full_fast.yaml:max_iter"
+      },
+      "medhelm_joint_subset": {
+        "value": 3,
+        "source": "configs/helm_real_pairwise_gap_joint_subset.yaml:max_iter"
+      },
+      "summeval_appendix_pilot": {
+        "value": 80,
+        "source": "scripts/run_summeval_appendix_pilot.py:54-62"
+      }
+    },
+    "convergence_failure_rule": {
+      "aceb_staged": "Optimizer result.success is not checked in staged ACEB; diagnostics store objective history and tau diagnostics.",
+      "runner_failures": "Runners catch exceptions and write failed outputs unless strict=True.",
+      "source": "src/cmveb/models/anchored_eb.py:300-367; src/cmveb/benchmarks/helm_runner.py:403-430; src/cmveb/benchmarks/graph_synthetic.py:1237-1262"
+    }
+  },
+  "residual_calibration": {
+    "default": {
+      "value": "leave_view",
+      "source": "src/cmveb/config.py:37; src/cmveb/models/anchored_eb.py:283-291"
+    },
+    "leave_view_formula": {
+      "value": "For each row, subtract that row's sufficient-statistic contribution from the item posterior; tau2_raw_j is mean((y_ij - b_j - a_j m_{i,-row})^2 - a_j^2 V_{i,-row} - s_ij^2) over rows in view j; tau2_j=max(tau2_raw_j,0) clipped to bounds.",
+      "source": "src/cmveb/calibration.py:51-163"
+    },
+    "in_sample_formula": {
+      "value": "mean((y_ij - b_j - a_j m_i)^2 + a_j^2 V_i - s_ij^2) with positive-part/clipping by view.",
+      "source": "src/cmveb/models/anchored_eb.py:135-159"
+    },
+    "unit_crossfit": {
+      "value": "Implemented but not used in main reported runs; refits nuisance parameters on item folds, then uses leave-view posterior on held-out items.",
+      "source": "src/cmveb/models/anchored_eb.py:162-249"
+    },
+    "tau_scope": {
+      "default": "per-view tau_j",
+      "global_variant": "aceb_global_tau pools leave-view tau2 across views in component/oracle ablation only.",
+      "source": "src/cmveb/benchmarks/graph_synthetic.py:1152-1169"
+    },
+    "posterior_after_tau_update": {
+      "value": true,
+      "source": "src/cmveb/models/anchored_eb.py:360-362"
+    }
+  },
+  "baseline_contracts": {
+    "inverse_variance_all_views": {
+      "definition": "Per item, posterior mean is inverse-variance weighted average of all observed estimates; variance is reciprocal total precision.",
+      "variance_floor": "precision denominator floored at 1e-18",
+      "uses_target_labels": false,
+      "source": "src/cmveb/models/baseline.py:187-199"
+    },
+    "random_effects_meta_analysis": {
+      "definition": "Per item DerSimonian-Laird-style random-effect variance max(0,(Q-(n-1))/c), then weights 1/(se^2 + random_effect_variance_i).",
+      "uses_target_labels": false,
+      "source": "src/cmveb/models/baseline.py:354-384"
+    },
+    "adaptive_shrinkage_like": {
+      "definition": "Collapse all views to inverse-variance estimate/variance; fit zero-centered normal mixture with grid [0, geomspace(max_abs/20,max_abs*2,12)] by EM.",
+      "tol": 1e-8,
+      "posterior_variance_floor": 1e-18,
+      "uses_target_labels": false,
+      "source": "src/cmveb/models/baseline.py:395-450"
+    },
+    "posthoc_inverse_variance_all_views": {
+      "definition": "Fits inverse variance, then inflates posterior variance by scalar c^2. If truth is supplied, c^2=max(1,mean(z^2)) on a random calibration subset using target truth; otherwise c^2 is estimated from held-out views.",
+      "calibration_fraction": 0.3,
+      "random_state_default": 0,
+      "source": "src/cmveb/models/baseline.py:453-518",
+      "target_label_use": {
+        "synthetic_main_graph_and_intervention": "truth is passed by graph_synthetic.run_graph_methods; target-calibrated/oracle-like for synthetic comparisons.",
+        "medhelm_full_fast": "truth_eval is passed by helm_runner.run_methods; target-calibrated/transductive.",
+        "summeval_appendix": "truth=None is passed; view-heldout calibration only, no expert targets supplied.",
+        "same_coverage_and_negative_control": "truth=None before explicit calibration split."
+      }
+    },
+    "joint_eb_full": {
+      "definition": "Joint L-BFGS-B marginal likelihood fit over feature prior parameters, non-reference log loadings, and log extra noise; reference loading fixed to 1; extra noise clipped above at 10.",
+      "penalty": "1e-4 on w_mu/w_v only",
+      "status_in_full_medhelm": "skipped_full_run",
+      "timeout_in_joint_subset": 1800,
+      "source": "src/cmveb/models/baseline.py:267-316; configs/helm_real_pairwise_gap_full_fast.yaml:skipped_baselines; configs/helm_real_pairwise_gap_joint_subset.yaml:joint_eb_full_timeout_seconds"
+    }
+  },
+  "real_data_specific_contract": {
+    "helm_orientation": {
+      "higher_is_better_required": true,
+      "lower_is_better_transform": "estimate and target_estimate multiplied by -1; raw values preserved.",
+      "source": "src/cmveb/datasets/helm_adapter.py:168-196"
+    },
+    "helm_leakage_guard": {
+      "value": "Raises if target_estimate is missing unless allow_view_mean_truth=True.",
+      "source": "src/cmveb/datasets/helm_adapter.py:199-210; configs/helm_real_pairwise_gap_full_fast.yaml:allow_view_mean_truth"
+    },
+    "helm_pairwise_gap_item_id": {
+      "value": "model_a + '__minus__' + model_b + '__' + scenario_id + '__' + metric_name",
+      "source": "src/cmveb/datasets/helm_adapter.py:299-307"
+    },
+    "target_aware_metrics": {
+      "denominator": "sqrt(posterior_var + target_standard_error^2)",
+      "coverage_level": 0.9,
+      "source": "src/cmveb/evaluate.py:139-227"
+    }
+  },
+  "not_recovered": [
+    {
+      "quantity": "Exact command line for every reported run",
+      "reason": "Some run scripts and configs are present, but a complete command log for every artifact was not found in inspected paths."
+    },
+    {
+      "quantity": "Exact SciPy ftol/gtol values",
+      "reason": "The code does not set them; only maxiter is explicitly passed."
+    },
+    {
+      "quantity": "A formal admissible-anchor function h beyond exactly-one-reference-view validation",
+      "reason": "No such function or threshold was found in the actual fit path."
+    }
+  ]
+}

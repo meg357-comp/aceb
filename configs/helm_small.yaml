@@ -1,0 +1,21 @@
+run_id: helm_small_fixture
+input_path: tests/fixtures/helm_tiny.csv
+experiment_mode: model_score_mode
+graph_design: star_plus_edge
+standard_error_floor: 0.02
+random_state: 17
+max_iter: 20
+reuse_cached: true
+include_mash: true
+real_data_target_uncertainty: true
+methods:
+  - raw_reference
+  - inverse_variance_all_views
+  - normal_eb_no_features
+  - feature_normal_eb_no_view_scale
+  - joint_eb_full
+  - anchored_calibrated_eb
+  - random_effects_meta_analysis
+  - adaptive_shrinkage_like
+  - posthoc_inverse_variance_all_views
+  - mashr_multivariate_eb

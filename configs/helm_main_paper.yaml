@@ -1,0 +1,30 @@
+run_id: helm_main_paper
+input_path: data/processed/helm_normalized.csv
+experiment_mode: pairwise_gap_mode
+graph_design: all_views
+graph_designs:
+  - all_views
+  - star_views
+  - chain_views
+  - odd_cycle_views
+  - star_plus_edge_views
+  - random_sparse_views
+require_target_estimate: true
+require_higher_is_better: true
+allow_view_mean_truth: false
+standard_error_floor: 0.01
+min_shared_items: 10
+reuse_cached: true
+random_state: 0
+max_iter: 60
+include_mash: false
+strict: false
+real_data_target_uncertainty: true
+methods:
+  - raw_reference
+  - inverse_variance_all_views
+  - joint_eb_full
+  - anchored_calibrated_eb
+  - anchored_calibrated_eb_in_sample
+  - random_effects_meta_analysis
+  - adaptive_shrinkage_like

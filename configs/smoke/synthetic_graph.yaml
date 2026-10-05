@@ -1,0 +1,27 @@
+run_id: synthetic_graph_smoke
+experiment_type: synthetic_graph
+random_state: 7
+overwrite: true
+strict: false
+
+graph_designs:
+  - star
+  - star_plus_edge_closes_triangle
+n_items_values: [40]
+n_views_values: [5]
+tau_ratios: [0.5]
+loading_spreads: [0.5]
+missingness_modes: [none]
+theta_distributions: [normal]
+seeds: [7]
+max_iter: 3
+
+include_bootstrap: false
+include_mash: false
+include_oracles: false
+methods:
+  - inverse_variance_all_views
+  - random_effects_meta_analysis
+  - adaptive_shrinkage_like
+  - anchored_calibrated_eb_in_sample
+  - anchored_calibrated_eb

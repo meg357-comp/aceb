@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+build/
+dist/
+.ipynb_checkpoints/
+*.log
+.DS_Store
+
+results/*
+!results/README.md
+examples/tiny/data/*.parquet
+examples/tiny/output/

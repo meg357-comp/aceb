@@ -1,0 +1,44 @@
+run_id: openml_local_real
+mode: local_real
+graph_design: star_plus_edge_views
+graph_designs:
+  - all_views
+  - star_views
+  - chain_views
+  - odd_cycle_views
+  - star_plus_edge_views
+  - random_sparse_views
+metrics:
+  - accuracy
+  - balanced_accuracy
+transform: raw
+random_state: 0
+seeds: [0, 1, 2, 3, 4]
+n_folds: 5
+datasets:
+  - breast_cancer
+  - wine
+  - digits
+digits_max_samples: 600
+min_standard_error: 0.015
+max_iter: 60
+reuse_cached: true
+include_mash: false
+include_bootstrap: false
+strict: false
+real_data_target_uncertainty: true
+algorithms:
+  - logistic_regression
+  - random_forest
+  - gradient_boosting
+  - k_neighbors
+  - dummy_classifier
+methods:
+  - raw_reference
+  - inverse_variance_all_views
+  - joint_eb_full
+  - anchored_calibrated_eb
+  - anchored_calibrated_eb_in_sample
+  - random_effects_meta_analysis
+  - adaptive_shrinkage_like
+  - posthoc_inverse_variance_all_views

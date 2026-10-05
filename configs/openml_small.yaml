@@ -1,0 +1,30 @@
+run_id: openml_small_toy
+mode: toy
+graph_design: star_plus_edge
+n_datasets: 6
+n_views: 5
+metric: accuracy
+transform: raw
+random_state: 13
+max_iter: 20
+reuse_cached: true
+include_mash: true
+include_bootstrap: false
+real_data_target_uncertainty: true
+algorithms:
+  - logistic_regression
+  - random_forest
+  - gradient_boosting
+  - svm
+  - dummy_classifier
+methods:
+  - raw_reference
+  - inverse_variance_all_views
+  - normal_eb_no_features
+  - feature_normal_eb_no_view_scale
+  - joint_eb_full
+  - anchored_calibrated_eb
+  - random_effects_meta_analysis
+  - adaptive_shrinkage_like
+  - posthoc_inverse_variance_all_views
+  - mashr_multivariate_eb

@@ -1,0 +1,59 @@
+run_id: synthetic_graph_medium
+experiment_type: synthetic_graph
+random_state: 202
+overwrite: false
+strict: false
+graph_designs:
+  - complete
+  - star
+  - star_plus_edge_closes_triangle
+  - chain
+  - even_cycle
+  - odd_cycle
+  - triangle_plus_tails
+  - disconnected
+  - random_erdos_renyi
+  - nearly_bipartite
+n_items_values:
+  - 1000
+  - 5000
+n_views_values:
+  - 5
+  - 10
+tau_ratios:
+  - 0
+  - 0.5
+  - 1
+  - 2
+loading_spreads:
+  - 0.3
+  - 1.0
+missingness_modes:
+  - none
+  - MCAR
+  - MAR
+  - MNAR
+theta_distributions:
+  - normal
+  - t
+  - mixture
+  - bounded_logit
+seeds:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+max_iter: 40
+include_bootstrap: false
+include_mash: false
+include_oracles: false
+methods:
+  - raw_reference
+  - inverse_variance_all_views
+  - joint_eb_full
+  - anchored_calibrated_eb
+  - anchored_calibrated_eb_in_sample
+  - random_effects_meta_analysis
+  - adaptive_shrinkage_like
+  - posthoc_inverse_variance_all_views

@@ -1,0 +1,16 @@
+data:
+  observations: examples/tiny/data/observations.parquet
+  item_features: examples/tiny/data/item_features.parquet
+  view_metadata: examples/tiny/data/view_metadata.parquet
+  output_dir: examples/tiny/output
+
+preprocess:
+  feature_standardize: true
+
+model:
+  residual_calibration: leave_view
+  random_state: 7
+
+fit:
+  seed: 7
+  max_iter: 50
